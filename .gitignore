@@ -1,0 +1,19 @@
+# Ignore virtual environments
+env/
+venv/
+
+# Ignore Python bytecode files and caches
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore environment configuration files
+.env
+
+# Ignore log files and temporary files
+*.log
+*.bak
+*.swp
+
+# Ignore system-specific files
+team_coordinator.db
