@@ -1,15 +1,22 @@
+from flask import Flask, request, abort, jsonify
 import hmac
 import hashlib
-from flask import request, abort
 import os
 from dotenv import load_dotenv
 
+# Load environment variables first
+load_dotenv()
 
+app = Flask(__name__)
+
+# Use relative import
+from .routes import routes
+app.register_blueprint(routes)
 
 @app.route('/webhook', methods=['POST'])
 def github_webhook():
     # Get secret from environment
-    secret = b"your_github_webhook_secret"
+    secret = os.getenv("GITHUB_WEBHOOK_SECRET").encode()
     
     # Verify payload signature
     signature = request.headers.get('X-Hub-Signature-256')
@@ -28,8 +35,22 @@ def github_webhook():
     event = request.headers.get('X-GitHub-Event')
     payload_json = request.json
 
-    # For now, just return a success response
+    # Placeholder for event processing
+    process_github_event(event, payload_json)
+
     return {"message": f"Received {event} event", "payload": payload_json}, 200
 
-load_dotenv()
-GITHUB_WEBHOOK_SECRET = os.getenv("GITHUB_WEBHOOK_SECRET").encode()
+def process_github_event(event, payload):
+    """
+    Process different GitHub webhook events
+    """
+    if event == 'push':
+        # Handle push event
+        print(f"Push event received: {payload}")
+    elif event == 'pull_request':
+        # Handle pull request event
+        print(f"Pull request event received: {payload}")
+    # Add more event handlers
+
+if __name__ == '__main__':
+    app.run(debug=True)
